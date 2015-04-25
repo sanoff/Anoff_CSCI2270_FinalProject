@@ -1,6 +1,6 @@
 #include<iostream>
 #include<fstream>
-
+#include<vector>
 #include"HashTable.h"
 
 HashTable::HashTable()
@@ -24,7 +24,7 @@ HashTable::~HashTable()
 	delete[]hashTable;
 }
 
-void HashTable::printInventory()
+/*void HashTable::printInventory()
 {
 	if (size == 0)	//nothing in dood-ma-bob
 	{
@@ -36,16 +36,116 @@ void HashTable::printInventory()
 		if (hashTable[i] == nullptr)
 			continue;	//skip rest
 		std::cout << hashTable[i]->title << ":" << hashTable[i]->year << std::endl;
-		if (hashTable[i]->next != nullptr)	//I wanted to do this after the initial cout because I don't want to allocate from the heap in the majority of cases.
+		if (hashTable[i]->next != nullptr)
 		{
 			Movie* temp = hashTable[i]->next;
-			while (temp != nullptr)			//traverse the linked list
+			while (temp != nullptr)
 			{
 				std::cout << temp->title << ":" << temp->year << std::endl;
 				temp = temp->next;
 			}
 		}
 	}
+}
+*/
+void HashTable::printInventory()
+{
+
+    for(int i = 0; i < 10; i++)
+    {
+        std::vector<Movie*> collisions;
+        if(hashTable[i]->year != NULL)
+        {
+            Movie * temp = hashTable[i];
+            while(temp != NULL)
+            {
+                collisions.push_back(temp);
+                temp = temp->next;
+            }
+            sortMovie(collisions);
+        }
+        if(hashTable[i]->title == "")
+        {
+            std::cout << "The table is empty." << std::endl;
+            return;
+        }
+    }
+}
+Movie * HashTable::sizeDouble()
+{
+
+}
+
+void HashTable::printYears()
+{
+
+}
+//Pre-Condition - this method checks the hash table to see if all of the indexes are full, and furthermore, if the hash table can be expanded.
+//Post condition - Undecided, but functionality may be added in the allows the hash table to be doubled in size and for the hash sum function to also use a mod double the size so that
+//The new indexes in the array can be filled. Otherwise, this new functionality doesn't do anything to the array.
+bool HashTable::isFull()
+{
+int spaceChecker = 0;
+for(int i = 0; i < 10; i++)
+{
+    if(hashTable[i] == nullptr || hashTable[i]->title == "")
+    {
+        spaceChecker++; //Counts the number of nulls in the array.
+    }
+}
+if (spaceChecker == 0) //If there aren't any spaces available.
+{
+    std::cout << "The hash table is full" << std::endl;
+    return true;
+}
+std::cout << "The hash table has " << spaceChecker << " spaces remaining in the array." << std::endl;
+return false;
+}
+//Pre-Condition - This movie has to exist in the array, or else the search will fail. The user must input a string for the program to search for. The program only works
+//If the search condition is at the beginning of the movie title. For instance, Shaw will return Shawshank redemption, but Redemption will not.
+//Post-condition - No actual changes are made to the array here.
+void HashTable::searchMovie(std::string title)
+{
+std::string searchedFor;
+Movie ** tempTable = hashTable;
+std::cout << hashTable[1]->title[0] <<hashTable[1]->title[1] <<  std::endl;
+int year;
+int length = title.length();
+for(int i = 0; i < 10; i++)
+{
+
+}
+std::cout << "Were you looking for " << searchedFor << " made in " << year << "?" << std::endl;
+}
+//An alternative sorting algorithm that sorts movies by using vectors.
+//Precondition: The array must already be built with at least n number of values to sort them into an array.
+//post-condition: The values in the array are spit back out using a vector in an attempt to alphabetize them.
+void HashTable::sortMovie(std::vector<Movie*> collisions)
+{
+    bool boolFlag = true;
+    int intD = collisions.size();
+    Movie* wordTemp;
+    while(boolFlag || (intD < 1))
+    {
+        boolFlag = false;
+        intD = (intD + 1)/2;
+        for(int i = 0; i < (collisions.size()-intD); i++)
+        {
+            if(collisions[i + intD]->title.compare(collisions[i]->title) < 0)
+            {
+                wordTemp = collisions[i + intD];
+                collisions[i+intD] = collisions[i];
+                collisions[i] = wordTemp;
+                boolFlag = true;
+            }
+        }
+    }
+    int m;
+    for(int x = 0; x<collisions.size(); x++)
+    {
+        m = get_hash_key(collisions[x]->title);
+        std::cout << collisions[x]->title << ":" << collisions[x]->year << std::endl;
+    }
 }
 //Pre condition: There aren't any preconditions for this, the user simply has to input a year and a title.
 //Post condition: The data input by the user is hashed and added to the hash table.
@@ -61,12 +161,45 @@ void HashTable::insertMovie(std::string& in_title, int& in_year)
 	}
 	size++;
 }
+//Pre-Condition: this file must exist in the directory in which you are searching, but the file can be read in to the library like any normal infile, except from the main menu.
+/*void HashTable::addfile(ifstream& in_file)
+{
+    in_file.open(in_file);
+    if (in_file.is_open())
+	{
+		int year;
+		string title, buffer;
+		while (!in_file.eof())
+		{
+			getline(in_file, buffer, ',');	//rating - ditch
+			getline(in_file, buffer, ',');
+			title = buffer;
+			getline(in_file, buffer, ',');
+			year = stoi(buffer);
+			getline(in_file, buffer);		//quantity - ditch
+
+			hash->insertMovie(title, year);
+		}
+	}
+	in_file.close();
+}
+*/
 //Precondition for Delete movie: Movie is a valid string and exists in the hash table.
 //This function prompts the user for a movie name which then has its memory cleared up in the hash table if it exists there.
 void HashTable::deleteMovie(std::string& in_title)
 {
 
 	int key = get_hash_key(in_title);
+	if(in_title == "all")
+    {
+        for(int i = 0; i < 10; i++)
+        {
+            hashTable[i]->title = "";
+            hashTable[i]->year = 0;
+        }
+        std::cout << "Table has been cleared." << std::endl; // Clears out the entirety of the table.
+        return;
+    }
 
 	if (hashTable[key]->title == in_title && hashTable[key]->next == nullptr) //If it's the only entry at that point.
 	{
@@ -80,7 +213,7 @@ void HashTable::deleteMovie(std::string& in_title)
 	Movie* prev = it; //New pointers for the linked list at collisions.
 	Movie* del = nullptr;
 
-	while (del == nullptr)
+	while (del == nullptr) //Deals with the linked list situation.
 	{
 		if (it->title == in_title)
 		{
