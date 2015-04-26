@@ -78,15 +78,16 @@ Movie * HashTable::sizeDouble()
 {
 
 }
+//Prototype: std::vector <Movie*> printYears();
 //Pre-condition: There is no pre-condition for this method, when called, it will simply output the movies ordered by date instead of by year.
 //Post-condition: No actual changes are made to the hash table here, it simply is a void function that provides couts, and uses the vector functionality to do this.
 std::vector <Movie*> HashTable::printYears()
 {
 std::string title;
-std::vector <Movie*> years;
+std::vector <Movie*> years; 
 int year;
-Movie* temp;
-int maxYear = 3000;
+Movie* temp; //Holds the head so the list is not affected
+int maxYear = 3000; //Temp variable for comparisons in the iterations.
 for(int i = 0; i < 10; i++)
 {
     temp = hashTable[i];
@@ -99,17 +100,21 @@ for(int i = 0; i < 10; i++)
     hashTable[i] = temp;
 }
 
-return years;
+return years; //Gives back years to plug into the overloaded function
 }
+//Prototype: void printYears(std::vector <Movie*> years);
+//Pre-Condition: Must first run through the initial printyears function, which automatically calls this one by returning the 
+//The vector parameter. Will fail if the list is empty.
+//Post condition: The list itself is not affected, but the movies are output ordered by years.
 void HashTable::printYears(std::vector <Movie*> years)
 {
 
 
 for(int k = 0; k < years.size(); k++)
 {
-    Movie * temp;
+    Movie * temp; //Holds the years variable and sets it to true for later on so that movies are not output multiple times.
     int maxYears = 3000;
-    std::string tempTitle;
+    std::string tempTitle; //Holds the title to output later.
     int  counter = 0;
     int index;
 
@@ -133,9 +138,10 @@ for(int k = 0; k < years.size(); k++)
 }
     for(int l = 0; l < years.size(); l++)
     {
-        years[l]->found = false;
+        years[l]->found = false; //Resets the array so that the found is false for everything so that the function can be rerun.
     }
 }
+//Prototype: bool isFull();
 //Pre-Condition - this method checks the hash table to see if all of the indexes are full, and furthermore, if the hash table can be expanded.
 //Post condition - Undecided, but functionality may be added in the allows the hash table to be doubled in size and for the hash sum function to also use a mod double the size so that
 //The new indexes in the array can be filled. Otherwise, this new functionality doesn't do anything to the array.
@@ -157,6 +163,7 @@ if (spaceChecker == 0) //If there aren't any spaces available.
 std::cout << "The hash table has " << spaceChecker << " spaces remaining in the array." << std::endl;
 return false;
 }
+///Prototype: bool isFull();
 //Pre-Condition - This movie has to exist in the array, or else the search will fail. The user must input a string for the program to search for. The program only works
 //If the search condition is at the beginning of the movie title. For instance, Shaw will return Shawshank redemption, but Redemption will not.
 //Post-condition - No actual changes are made to the array here - a temporary variable is allocated to prevent the terms in the table from actually moving.
@@ -197,9 +204,12 @@ for(int i = 0; i < 10; i++)
 }
 std::cout << "Movie_not_found.exe" << std::endl; //Because of the two returns, this only occurs if the movie is not found.
 }
+//Prototype: bool isFull();
 //An alternative sorting algorithm that sorts movies by using vectors.
-//Precondition: The array must already be built with at least n number of values to sort them into an array.
-//post-condition: The values in the array are spit back out using a vector in an attempt to alphabetize them.
+//Precondition: The array must already be built with at least n number of values to sort them into an array, but this method 
+//Is automatically called when the movies are sorted. 
+//post-condition: The values in the array are spit back out using a vector in an attempt to alphabetize them, however
+//The actual linked list is not affected.
 void HashTable::sortMovie(std::vector<Movie*> collisions)
 {
     bool boolFlag = true;
@@ -227,7 +237,10 @@ void HashTable::sortMovie(std::vector<Movie*> collisions)
         std::cout << collisions[x]->title << ":" << collisions[x]->year << std::endl;
     }
 }
-//Pre condition: There aren't any preconditions for this, the user simply has to input a year and a title.
+//Prototype: 	void insertMovie(std::string&, int&);	
+//Pre condition: There aren't any preconditions for this, the user simply has to input a year (int) and a title (string), and a movie will
+//Be input into the Hash table. Additional functionality has been added so it can be sorted into a vector later on. Will break if
+//Variable types are incorrect.
 //Post condition: The data input by the user is hashed and added to the hash table.
 void HashTable::insertMovie(std::string& in_title, int& in_year)
 {
@@ -264,8 +277,10 @@ void HashTable::insertMovie(std::string& in_title, int& in_year)
 	in_file.close();
 }
 */
-//Precondition for Delete movie: Movie is a valid string and exists in the hash table.
-//This function prompts the user for a movie name which then has its memory cleared up in the hash table if it exists there.
+//Prototype: 	void insertMovie(std::string&, int&);	
+//Precondition for Delete movie: Movie is a valid string and exists in the hash table. If the movie is not a valid string, not found will be output.
+//PostCondition: This function prompts the user for a movie name which then has its memory cleared up in the hash table if it exists there. 
+//The user will have to readd the movie to be able to call it again.
 void HashTable::deleteMovie(std::string& in_title)
 {
 
@@ -337,8 +352,9 @@ void HashTable::collision_resolution(std::string& in_title, int& in_year, int& k
 	}
 	prev->next = new_movie;	//if it has not returned yet, make it the last of the chain
 }
+//Prototype: void insertMovie(std::string&, int&);	
 //Pre-condition: User has to input a valid string name for the title, and the movie has to exist within the array.
-//Post condition - Nothing happens, a cout is simply returned to the user.
+//Post condition - Nothing happens, a cout is simply returned to the user with the data of the movie.
 Movie* HashTable::findMovie(std::string& in_title)
 {
 	int key = get_hash_key(in_title);
@@ -353,18 +369,22 @@ Movie* HashTable::findMovie(std::string& in_title)
 	return ans;	//at this point, ans either holds the answer the function call came for, or nullptr, which is the default case for not found
 }
 
+//Returns the size of the hash table - getter function.
 unsigned int HashTable::get_size()
 {
 	return size;
 }
-//Simply checks if the hash table is empty or nah.
+//Simply checks if the hash table is empty or nah - Getter function.
 bool HashTable::is_empty()
 {
 	if (size > 0)
 		return false;
 	return true;
 }
-//Creates a hash sum, called in many different functions. No pre/post conditions.
+//Creates a hash sum, called in many different functions.
+//Prototype: int get_hash_key(std::string&);
+//Pre-condition: Has to be a valid title or this program will not work.
+//Postcondition: Not called directly, but this hashsum causes the movie to be placed in the array.
 int HashTable::get_hash_key(std::string& in_title)
 {
 	int sum = 0;
