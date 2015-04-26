@@ -9,6 +9,7 @@ struct Movie
     std::string title;
     int year;
 	int index;
+	bool found;
     Movie* next;
 
     Movie()
@@ -17,6 +18,7 @@ struct Movie
 		year = -1;
 		index = -1;
 		next = nullptr;
+		found = false;
 	};
 
     Movie(std::string& in_title, int& in_year)
@@ -25,6 +27,7 @@ struct Movie
         year = in_year;
 		index = -1;
 		next = nullptr;
+		found = false;
 	};
 
 	Movie(std::string& in_title, int& in_year, int& in_index)
@@ -33,6 +36,7 @@ struct Movie
 		year = in_year;
 		index = in_index;
 		next = nullptr;
+		found = false;
 	};
 
 };
@@ -53,7 +57,8 @@ public:
 	void sortMovie(std::vector<Movie*> collisions);
 	Movie* sizeDouble();
 	void searchMovie(std::string title);
-	void printYears();
+	std::vector <Movie*> printYears();
+	void printYears(std::vector <Movie*> years);
 	bool isFull();
 	unsigned int get_size();
 	bool is_empty();

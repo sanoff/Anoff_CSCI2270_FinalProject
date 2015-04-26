@@ -53,7 +53,7 @@ void HashTable::printInventory()
 
     for(int i = 0; i < 10; i++)
     {
-        std::vector<Movie*> collisions;
+        std::vector<Movie*> collisions; //Creates a vector for sorting
         if(hashTable[i]->year != NULL)
         {
             Movie * temp = hashTable[i];
@@ -62,7 +62,7 @@ void HashTable::printInventory()
                 collisions.push_back(temp);
                 temp = temp->next;
             }
-            sortMovie(collisions);
+            sortMovie(collisions); //sorts dem movies.
         }
         if(hashTable[i]->title == "")
         {
@@ -71,14 +71,70 @@ void HashTable::printInventory()
         }
     }
 }
+//Additional functionality wanted:
+//Precondition: Will input the hash table, create a new one that has double the indexes and uses a hash sum function with double the mod value.
+//Post-condition: will output a filled Hash table with double the index.
 Movie * HashTable::sizeDouble()
 {
 
 }
+//Pre-condition: There is no pre-condition for this method, when called, it will simply output the movies ordered by date instead of by year.
+//Post-condition: No actual changes are made to the hash table here, it simply is a void function that provides couts, and uses the vector functionality to do this.
+std::vector <Movie*> HashTable::printYears()
+{
+std::string title;
+std::vector <Movie*> years;
+int year;
+Movie* temp;
+int maxYear = 3000;
+for(int i = 0; i < 10; i++)
+{
+    temp = hashTable[i];
+    while(hashTable[i]->next != NULL)
+    {
+        years.push_back(hashTable[i]);
+        hashTable[i] = hashTable[i]->next;
+    }
+    years.push_back(hashTable[i]);
+    hashTable[i] = temp;
+}
 
-void HashTable::printYears()
+return years;
+}
+void HashTable::printYears(std::vector <Movie*> years)
 {
 
+
+for(int k = 0; k < years.size(); k++)
+{
+    Movie * temp;
+    int maxYears = 3000;
+    std::string tempTitle;
+    int  counter = 0;
+    int index;
+
+    for(int i = 0; i < years.size(); i++)
+    {
+        if(!years[i]->found)
+        {
+            if(years[i]->year <= maxYears)
+            {
+                index = counter;
+                maxYears = years[i]->year;
+                tempTitle = years[i]->title;
+                temp = years[i];
+            }
+        }
+        counter++;
+    }
+            temp->found = true; //If it's the youngest, this variable is set to true so that it is not used again.
+     std::cout << tempTitle << ":" << maxYears << std::endl;
+
+}
+    for(int l = 0; l < years.size(); l++)
+    {
+        years[l]->found = false;
+    }
 }
 //Pre-Condition - this method checks the hash table to see if all of the indexes are full, and furthermore, if the hash table can be expanded.
 //Post condition - Undecided, but functionality may be added in the allows the hash table to be doubled in size and for the hash sum function to also use a mod double the size so that
@@ -103,19 +159,43 @@ return false;
 }
 //Pre-Condition - This movie has to exist in the array, or else the search will fail. The user must input a string for the program to search for. The program only works
 //If the search condition is at the beginning of the movie title. For instance, Shaw will return Shawshank redemption, but Redemption will not.
-//Post-condition - No actual changes are made to the array here.
+//Post-condition - No actual changes are made to the array here - a temporary variable is allocated to prevent the terms in the table from actually moving.
 void HashTable::searchMovie(std::string title)
 {
-std::string searchedFor;
-Movie ** tempTable = hashTable;
-std::cout << hashTable[1]->title[0] <<hashTable[1]->title[1] <<  std::endl;
+std::string searchedFor; //The movie that is to be returned.
+std::string tempCheck; //Checks for this variable
+Movie*temp; //A temp variable used to cycle through the linked list.
 int year;
 int length = title.length();
+//std::cout << (hashTable[1]->title).substr(0,length) << title << std::endl;
 for(int i = 0; i < 10; i++)
 {
+    if((hashTable[i]->title).substr(0, length) != title)
+    {
+    temp = hashTable[i]; //resets this at the beginning and end of every iteration of a linked list.
+        while(hashTable[i]->next != NULL)
+        {
+            hashTable[i] = hashTable[i]->next;
+            if((hashTable[i]->title).substr(0,length) == title) //In the situation the movie is in the list.
+            {
+                searchedFor = hashTable[i]->title;
+                year = hashTable[i]->year;
+                std::cout << "Were you looking for " << searchedFor << " made in " << year << "?" << std::endl;
+                return;
+            }
 
+        }
+    }
+    else if((hashTable[i]->title).substr(0,length) == title) //Otherwise if it's in the array looks for it.
+    {
+        searchedFor = hashTable[i]->title;
+        year = hashTable[i]->year;
+        std::cout << "Were you looking for " << searchedFor << " made in " << year << "?" << std::endl;
+        return;
+    }
+    hashTable[i] = temp;
 }
-std::cout << "Were you looking for " << searchedFor << " made in " << year << "?" << std::endl;
+std::cout << "Movie_not_found.exe" << std::endl; //Because of the two returns, this only occurs if the movie is not found.
 }
 //An alternative sorting algorithm that sorts movies by using vectors.
 //Precondition: The array must already be built with at least n number of values to sort them into an array.
@@ -229,7 +309,9 @@ void HashTable::deleteMovie(std::string& in_title)
 
 	size--;
 }
-
+//Pre-Condition: This method is called automatically when inserts and print inventories are called to resolve the algorithms. They require a string,
+//title, and key all pointed to.
+//Post-condition: This method will create linked lists at the indexes that have collisions.
 void HashTable::collision_resolution(std::string& in_title, int& in_year, int& key)
 {
 	Movie* new_movie = new Movie(in_title, in_year, key);
@@ -275,14 +357,14 @@ unsigned int HashTable::get_size()
 {
 	return size;
 }
-
+//Simply checks if the hash table is empty or nah.
 bool HashTable::is_empty()
 {
 	if (size > 0)
 		return false;
 	return true;
 }
-
+//Creates a hash sum, called in many different functions. No pre/post conditions.
 int HashTable::get_hash_key(std::string& in_title)
 {
 	int sum = 0;

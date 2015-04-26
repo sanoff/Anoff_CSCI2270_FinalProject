@@ -8,13 +8,14 @@ using std::cin;
 using std::cout;
 using std::endl;
 using std::string;
+using std::vector;
 
 
 int main(int argc, char* argv[])
 {
 	HashTable* hash = new HashTable();
 
-	std::ifstream in_file;	//might actually be useless.
+	std::ifstream in_file;
     in_file.open(argv[1]);
 	if (in_file.is_open())
 	{
@@ -22,24 +23,24 @@ int main(int argc, char* argv[])
 		string title, buffer;
 		while (!in_file.eof())
 		{
-			getline(in_file, buffer, ',');	//rating - ditch
+			getline(in_file, buffer, ',');
 			getline(in_file, buffer, ',');
 			title = buffer;
 			getline(in_file, buffer, ',');
 			year = stoi(buffer);
-			getline(in_file, buffer);		//quantity - ditch
+			getline(in_file, buffer);
 
 			hash->insertMovie(title, year);
 		}
 	}
 	else
 	{
-		//nothing for now.
+
 	}
 
 	int select = 0;
 
-	while (select < 5)
+	while (select < 8)
 	{
 
 		cout << "======Main Menu======" << endl
@@ -47,8 +48,11 @@ int main(int argc, char* argv[])
 			<< "2. Delete movie" << endl
 			<< "3. Find movie" << endl
 			<< "4. Print table contents" << endl
+			<< "5. Search for a movie" << endl
+			<< "6. Check for a full hash table" << endl
 			//<< "5. Copy a file's contents" << endl
-			<< "5. Quit" << endl;
+			<< "7. Order movies by year" << endl
+			<< "8. Quit" << endl;
 
 		cin >> select;
 
@@ -70,7 +74,11 @@ int main(int argc, char* argv[])
 			cout << "Enter title:" << endl;
 			cin.ignore(1000, '\n');
 			getline(cin, title);
-			hash->deleteMovie(title);
+				Movie* found_movie = hash->findMovie(title);
+			if (found_movie == nullptr)
+				cout << "Movie not found." << endl; //testing to see if the movie exists to prevent seg faults.
+			else
+                hash->deleteMovie(title);
 		}
 
 		if (select == 3)	//Find Movie
@@ -98,10 +106,26 @@ int main(int argc, char* argv[])
             hash->addfile(filename);
         }
         */
+        if  (select == 5)
+        {
+            string title;
+            cout << "What does the movie you're looking for start with?" << endl;
+            cin >> title;
+            hash->searchMovie(title);
+        }
+        if(select == 6)
+        {
+            hash->isFull();
+        }
+        if(select == 7)
+        {
+            vector <Movie*> years = hash->printYears();
 
-		if (select == 5)	//Quit
+            hash->printYears(years);
+        }
+		if (select == 8)	//Quit
 			cout << "Goodbye!" << endl;
-		if (select > 5)
+		if (select > 8)
 			cout << "---That was not an option.---\n\n";
 	}
 
