@@ -7,6 +7,7 @@ This project seeks to expand upon the HashTable class created in Assignment 9 wi
 
 How to Run:
 This program will have the same format that past assignments have had: It will be a compilation of the standard libraries with a few additional ones later on, and will be composed of a header file with all of the class prototype, a driver file, and a helper file that will have all of the class method definitions. Additionally, for the infile, the user can choose to compile this project with a text file of a format similar to Assignment5Movies.txt, and it will automatically create a sorted hash table. If all of the files are run together as a project (with or without a text file to read in) this program will work correctly.
+Additionally, the pre/post conditions, as well as the variable requirements are explained before each function definition in the function definitions file.
 
 System requirements:
 This program is intended to be compatible with all of the different types of operating systems.
