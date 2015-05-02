@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
 
 	int select = 0;
 
-	while (select < 8)
+	while (select != 8)
 	{
 
 		cout << "======Main Menu======" << endl

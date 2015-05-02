@@ -53,22 +53,14 @@ void HashTable::printInventory()
 
     for(int i = 0; i < 10; i++)
     {
-        std::vector<Movie*> collisions; //Creates a vector for sorting
-        if(hashTable[i]->year != NULL)
-        {
-            Movie * temp = hashTable[i];
-            while(temp != NULL)
-            {
-                collisions.push_back(temp);
-                temp = temp->next;
-            }
-            sortMovie(collisions); //sorts dem movies.
-        }
-        if(hashTable[i]->title == "")
-        {
-            std::cout << "The table is empty." << std::endl;
-            return;
-        }
+			Movie* temp = hashTable[i];
+			
+			while(temp!=NULL)
+			{
+				std::cout<<temp->title<<": "<<temp->year<<std::endl;
+				temp=temp->next;
+			}
+		
     }
 }
 //Additional functionality wanted:
